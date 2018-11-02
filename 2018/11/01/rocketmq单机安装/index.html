@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、RocketMQ单机版安装1. 下载alibaba-rocketmq-3.2.6.tar.gz 2. 解压alibaba-rocketmq-3.2.6.tar.gz tar -xzvf alibaba-rocketmq-3.2.6.tar.gz    3. 设置MQ环境变量和JAVA环境变量 [root@localhost alibaba-rocketmq]#vi /etc/profile">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RocketMQ单机版安装">
+<meta property="og:url" content="http://yoursite.com/2018/11/01/rocketmq单机安装/index.html">
+<meta property="og:site_name" content="Hu丶先生">
+<meta property="og:description" content="一、RocketMQ单机版安装1. 下载alibaba-rocketmq-3.2.6.tar.gz 2. 解压alibaba-rocketmq-3.2.6.tar.gz tar -xzvf alibaba-rocketmq-3.2.6.tar.gz    3. 设置MQ环境变量和JAVA环境变量 [root@localhost alibaba-rocketmq]#vi /etc/profile">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-11-01T11:39:43.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RocketMQ单机版安装">
+<meta name="twitter:description" content="一、RocketMQ单机版安装1. 下载alibaba-rocketmq-3.2.6.tar.gz 2. 解压alibaba-rocketmq-3.2.6.tar.gz tar -xzvf alibaba-rocketmq-3.2.6.tar.gz    3. 设置MQ环境变量和JAVA环境变量 [root@localhost alibaba-rocketmq]#vi /etc/profile">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/01/rocketmq单机安装/"/>
+
+
+
+
+
+  <title>RocketMQ单机版安装 | Hu丶先生</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hu丶先生</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">hukunchi</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/rocketmq单机安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RocketMQ单机版安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、RocketMQ单机版安装"><a href="#一、RocketMQ单机版安装" class="headerlink" title="一、RocketMQ单机版安装"></a>一、RocketMQ单机版安装</h2><p></p><h4 class="md-inpage-anchor">1. 下载alibaba-rocketmq-3.2.6.tar.gz</h4><p></p>
+<p></p><h4 class="md-inpage-anchor">2. 解压alibaba-rocketmq-3.2.6.tar.gz</h4><p></p>
+<p></p><p><div class="md-text"><code>tar -xzvf alibaba-rocketmq-3.2.6.tar.gz</code>   </div></p><p></p>
+<p></p><h4 class="md-inpage-anchor">3. 设置MQ环境变量和JAVA环境变量</h4><p></p>
+<p></p><p><div class="md-text"><code>[root@localhost alibaba-rocketmq]#vi /etc/profile</code>  </div></p><p></p>
+<pre><code>export ROCKETMQ_HOME=/usr/software/alibaba-rocketmq  
+export NAMESRV_ADDR=192.168.92.130:9876
+PATH=$PATH:$ROCKETMQ_HOME/bin
+----------
+JAVA_HOME=/home/software/jdk1.8.0_91
+JRE_HOME=/home/software/jdk1.8.0_91/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+export JAVA_HOME JRE_HOME PATH CLASSPATH  </code></pre>
+<p><div class="md-text"><code>[root@localhost alibaba-rocketmq]#source etc/profile</code> </div></p>
+<h4 class="md-inpage-anchor">3. 设置执行权限<span class="anchor-highlight" style="display: none;"></span></h4>
+<pre><code>[root@localhost bin]# cd alibaba-rocketmq
+[root@localhost bin]# mkdir ../log
+[root@localhost bin]# chmod +x ./*</code></pre>
+<h2 class="md-inpage-anchor">二、启动mqnamesrv和mqbroker</h2>>
+<pre><code>[root@localhost bin]#nohup mqnamesrv 1&gt;/usr/software/alibaba-rocketmq/log/ng.log 2&gt;/usr/software/alibaba-rocketmq/log/ng-err.log &amp;  
+[root@localhost bin]# tail -f /usr/software/alibaba-rocketmq/log/ng.log  
+The Name Server boot success.
+----------
+[root@localhost bin]#nohup mqbroker &gt;/usr/software/alibaba-rocketmq/log/mq.log &amp; 
+[root@localhost bin]# tail -f /usr/software/alibaba-rocketmq/log/mq.log
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=320m; support was removed in 8.0</code></pre>
+<h2 class="md-inpage-anchor">三、创建topic</h2>
+<h4 class="md-inpage-anchor">a.创建topic<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#a.%E5%88%9B%E5%BB%BAtopic" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>mqadmin updateTopic -n 192.168.92.130:9876 -t mytopictest -c DefaultCluster -b192.168.92.130:10911</code></pre>
+<h4 class="md-inpage-anchor">b.查看topic列表<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E6%9F%A5%E7%9C%8Btopic%E5%88%97%E8%A1%A8" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>mqadmin  topicList -n 192.168.92.130:9876</code></pre>
+<h2 class="md-inpage-anchor">三、创建测试程序</h2>
+<h4 class="md-inpage-anchor">a.创建MAVEN项目（POM如下）</h4>
+<pre><code>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;mqtest&lt;/groupId&gt;
+  &lt;artifactId&gt;mqtest&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+  &lt;name&gt;mqtest&lt;/name&gt;
+  &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+  &lt;properties&gt;
+&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;/properties&gt;
+  &lt;dependencies&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;junit&lt;/groupId&gt;
+  &lt;artifactId&gt;junit&lt;/artifactId&gt;
+  &lt;version&gt;3.8.1&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;com.alibaba.rocketmq&lt;/groupId&gt;
+&lt;artifactId&gt;rocketmq-client&lt;/artifactId&gt;
+&lt;version&gt;3.2.6&lt;/version&gt;
+&lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+<h4 class="md-inpage-anchor">b.生产者<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E7%94%9F%E4%BA%A7%E8%80%85" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>package com.autonavi.rocketmq.service;
+
+import java.util.concurrent.TimeUnit;
+
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
+
+public class Producer {
+    public static void main(String[] args) throws MQClientException,
+            InterruptedException {
+        /**
+         * 一个应用创建一个Producer，由应用来维护此对象，可以设置为全局对象或者单例&lt;br&gt;
+         * 注意：ProducerGroupName需要由应用来保证唯一&lt;br&gt;
+         * ProducerGroup这个概念发送普通的消息时，作用不大，但是发送分布式事务消息时，比较关键，
+         * 因为服务器会回查这个Group下的任意一个Producer
+         */
+        final DefaultMQProducer producer = new DefaultMQProducer(
+                "ProducerGroupName");
+        producer.setNamesrvAddr("192.168.92.130:9876");
+        producer.setInstanceName("Producer");
+
+        /**
+         * Producer对象在使用之前必须要调用start初始化，初始化一次即可&lt;br&gt;
+         * 注意：切记不可以在每次发送消息时，都调用start方法
+         */
+        producer.start();
+
+        /**
+         * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
+         * 注意：send方法是同步调用，只要不抛异常就标识成功。但是发送成功也可会有多种状态，&lt;br&gt;
+         * 例如消息写入Master成功，但是Slave不成功，这种情况消息属于成功，但是对于个别应用如果对消息可靠性要求极高，&lt;br&gt;
+         * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
+         */
+        for (int i = 0; i &lt; 10; i++) {
+            try {
+                {
+                    Message msg = new Message("TopicTest1",// topic
+                            "TagA",// tag
+                            "OrderID001",// key
+                            ("Hello MetaQA").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+
+                {
+                    Message msg = new Message("TopicTest2",// topic
+                            "TagB",// tag
+                            "OrderID0034",// key
+                            ("Hello MetaQB").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+
+                {
+                    Message msg = new Message("TopicTest3",// topic
+                            "TagC",// tag
+                            "OrderID061",// key
+                            ("Hello MetaQC").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            TimeUnit.MILLISECONDS.sleep(1000);
+        }
+
+        /**
+         * 应用退出时，要调用shutdown来清理资源，关闭网络连接，从MetaQ服务器上注销自己
+         * 注意：我们建议应用在JBOSS、Tomcat等容器的退出钩子里调用shutdown方法
+         */
+        // producer.shutdown();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                producer.shutdown();
+            }
+        }));
+        System.exit(0);
+    }
+}</code></pre>
+<h4 class="md-inpage-anchor">b.消费者<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E6%B6%88%E8%B4%B9%E8%80%85" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>package com.autonavi.rocketmq.service;
+
+import java.util.List;
+
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.common.message.MessageExt;
+
+public class Consumer {
+    /**
+     * 当前例子是PushConsumer用法，使用方式给用户感觉是消息从RocketMQ服务器推到了应用客户端。&lt;br&gt;
+     * 但是实际PushConsumer内部是使用长轮询Pull方式从MetaQ服务器拉消息，然后再回调用户Listener方法&lt;br&gt;
+     */
+    public static void main(String[] args) throws InterruptedException,
+            MQClientException {
+        /**
+         * 一个应用创建一个Consumer，由应用来维护此对象，可以设置为全局对象或者单例&lt;br&gt;
+         * 注意：ConsumerGroupName需要由应用来保证唯一
+         */
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(
+                "ConsumerGroupName");
+        consumer.setNamesrvAddr("192.168.92.130:9876");
+        consumer.setInstanceName("Consumber");
+
+        /**
+         * 订阅指定topic下tags分别等于TagA或TagC或TagD
+         */
+        consumer.subscribe("TopicTest1", "TagA || TagC || TagD");
+        /**
+         * 订阅指定topic下所有消息&lt;br&gt;
+         * 注意：一个consumer对象可以订阅多个topic
+         */
+        consumer.subscribe("TopicTest2", "*");
+
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+
+            public ConsumeConcurrentlyStatus consumeMessage(
+                    List&lt;MessageExt&gt; msgs, ConsumeConcurrentlyContext context) {
+
+                System.out.println(Thread.currentThread().getName()
+                        + " Receive New Messages: " + msgs.size());
+
+                MessageExt msg = msgs.get(0);
+                if (msg.getTopic().equals("TopicTest1")) {
+                    // 执行TopicTest1的消费逻辑
+                    if (msg.getTags() != null &amp;&amp; msg.getTags().equals("TagA")) {
+                        // 执行TagA的消费
+                        System.out.println(new String(msg.getBody()));
+                    } else if (msg.getTags() != null
+                            &amp;&amp; msg.getTags().equals("TagC")) {
+                        // 执行TagC的消费
+                        System.out.println(new String(msg.getBody()));
+                    } else if (msg.getTags() != null
+                            &amp;&amp; msg.getTags().equals("TagD")) {
+                        // 执行TagD的消费
+                        System.out.println(new String(msg.getBody()));
+                    }
+                } else if (msg.getTopic().equals("TopicTest2")) {
+                    System.out.println(new String(msg.getBody()));
+                }
+
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+
+            }
+        });
+
+        /**
+         * Consumer对象在使用之前必须要调用start初始化，初始化一次即可&lt;br&gt;
+         */
+        consumer.start();
+
+        System.out.println("ConsumerStarted.");
+    }
+}</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/../../images/wechatpay.jpg" alt="Hu丶先生 WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/01/rocketmq集群搭建/" rel="next" title="RocketMQ集群安装">
+                <i class="fa fa-chevron-left"></i> RocketMQ集群安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Hu丶先生</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、RocketMQ单机版安装"><span class="nav-number">1.</span> <span class="nav-text">一、RocketMQ单机版安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 下载alibaba-rocketmq-3.2.6.tar.gz</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 解压alibaba-rocketmq-3.2.6.tar.gz</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. 设置MQ环境变量和JAVA环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.0.4.</span> <span class="nav-text">3. 设置执行权限</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、启动mqnamesrv和mqbroker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">三、创建topic</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.0.1.</span> <span class="nav-text">a.创建topic⚓</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.0.2.</span> <span class="nav-text">b.查看topic列表⚓</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">三、创建测试程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">4.0.1.</span> <span class="nav-text">a.创建MAVEN项目（POM如下）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">4.0.2.</span> <span class="nav-text">b.生产者⚓</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">4.0.3.</span> <span class="nav-text">b.消费者⚓</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hu丶先生</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

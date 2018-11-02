@@ -229,6 +229,1835 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/rocketmq单机安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/rocketmq单机安装/" itemprop="url">RocketMQ单机版安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、RocketMQ单机版安装"><a href="#一、RocketMQ单机版安装" class="headerlink" title="一、RocketMQ单机版安装"></a>一、RocketMQ单机版安装</h2><p></p><h4 class="md-inpage-anchor">1. 下载alibaba-rocketmq-3.2.6.tar.gz</h4><p></p>
+<p></p><h4 class="md-inpage-anchor">2. 解压alibaba-rocketmq-3.2.6.tar.gz</h4><p></p>
+<p></p><p><div class="md-text"><code>tar -xzvf alibaba-rocketmq-3.2.6.tar.gz</code>   </div></p><p></p>
+<p></p><h4 class="md-inpage-anchor">3. 设置MQ环境变量和JAVA环境变量</h4><p></p>
+<p></p><p><div class="md-text"><code>[root@localhost alibaba-rocketmq]#vi /etc/profile</code>  </div></p><p></p>
+<pre><code>export ROCKETMQ_HOME=/usr/software/alibaba-rocketmq  
+export NAMESRV_ADDR=192.168.92.130:9876
+PATH=$PATH:$ROCKETMQ_HOME/bin
+----------
+JAVA_HOME=/home/software/jdk1.8.0_91
+JRE_HOME=/home/software/jdk1.8.0_91/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+export JAVA_HOME JRE_HOME PATH CLASSPATH  </code></pre>
+<p><div class="md-text"><code>[root@localhost alibaba-rocketmq]#source etc/profile</code> </div></p>
+<h4 class="md-inpage-anchor">3. 设置执行权限<span class="anchor-highlight" style="display: none;"></span></h4>
+<pre><code>[root@localhost bin]# cd alibaba-rocketmq
+[root@localhost bin]# mkdir ../log
+[root@localhost bin]# chmod +x ./*</code></pre>
+<h2 class="md-inpage-anchor">二、启动mqnamesrv和mqbroker</h2>>
+<pre><code>[root@localhost bin]#nohup mqnamesrv 1&gt;/usr/software/alibaba-rocketmq/log/ng.log 2&gt;/usr/software/alibaba-rocketmq/log/ng-err.log &amp;  
+[root@localhost bin]# tail -f /usr/software/alibaba-rocketmq/log/ng.log  
+The Name Server boot success.
+----------
+[root@localhost bin]#nohup mqbroker &gt;/usr/software/alibaba-rocketmq/log/mq.log &amp; 
+[root@localhost bin]# tail -f /usr/software/alibaba-rocketmq/log/mq.log
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=320m; support was removed in 8.0</code></pre>
+<h2 class="md-inpage-anchor">三、创建topic</h2>
+<h4 class="md-inpage-anchor">a.创建topic<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#a.%E5%88%9B%E5%BB%BAtopic" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>mqadmin updateTopic -n 192.168.92.130:9876 -t mytopictest -c DefaultCluster -b192.168.92.130:10911</code></pre>
+<h4 class="md-inpage-anchor">b.查看topic列表<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E6%9F%A5%E7%9C%8Btopic%E5%88%97%E8%A1%A8" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>mqadmin  topicList -n 192.168.92.130:9876</code></pre>
+<h2 class="md-inpage-anchor">三、创建测试程序</h2>
+<h4 class="md-inpage-anchor">a.创建MAVEN项目（POM如下）</h4>
+<pre><code>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;mqtest&lt;/groupId&gt;
+  &lt;artifactId&gt;mqtest&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+  &lt;name&gt;mqtest&lt;/name&gt;
+  &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+  &lt;properties&gt;
+&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;/properties&gt;
+  &lt;dependencies&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;junit&lt;/groupId&gt;
+  &lt;artifactId&gt;junit&lt;/artifactId&gt;
+  &lt;version&gt;3.8.1&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;com.alibaba.rocketmq&lt;/groupId&gt;
+&lt;artifactId&gt;rocketmq-client&lt;/artifactId&gt;
+&lt;version&gt;3.2.6&lt;/version&gt;
+&lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+<h4 class="md-inpage-anchor">b.生产者<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E7%94%9F%E4%BA%A7%E8%80%85" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>package com.autonavi.rocketmq.service;
+
+import java.util.concurrent.TimeUnit;
+
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
+
+public class Producer {
+    public static void main(String[] args) throws MQClientException,
+            InterruptedException {
+        /**
+         * 一个应用创建一个Producer，由应用来维护此对象，可以设置为全局对象或者单例&lt;br&gt;
+         * 注意：ProducerGroupName需要由应用来保证唯一&lt;br&gt;
+         * ProducerGroup这个概念发送普通的消息时，作用不大，但是发送分布式事务消息时，比较关键，
+         * 因为服务器会回查这个Group下的任意一个Producer
+         */
+        final DefaultMQProducer producer = new DefaultMQProducer(
+                "ProducerGroupName");
+        producer.setNamesrvAddr("192.168.92.130:9876");
+        producer.setInstanceName("Producer");
+
+        /**
+         * Producer对象在使用之前必须要调用start初始化，初始化一次即可&lt;br&gt;
+         * 注意：切记不可以在每次发送消息时，都调用start方法
+         */
+        producer.start();
+
+        /**
+         * 下面这段代码表明一个Producer对象可以发送多个topic，多个tag的消息。
+         * 注意：send方法是同步调用，只要不抛异常就标识成功。但是发送成功也可会有多种状态，&lt;br&gt;
+         * 例如消息写入Master成功，但是Slave不成功，这种情况消息属于成功，但是对于个别应用如果对消息可靠性要求极高，&lt;br&gt;
+         * 需要对这种情况做处理。另外，消息可能会存在发送失败的情况，失败重试由应用来处理。
+         */
+        for (int i = 0; i &lt; 10; i++) {
+            try {
+                {
+                    Message msg = new Message("TopicTest1",// topic
+                            "TagA",// tag
+                            "OrderID001",// key
+                            ("Hello MetaQA").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+
+                {
+                    Message msg = new Message("TopicTest2",// topic
+                            "TagB",// tag
+                            "OrderID0034",// key
+                            ("Hello MetaQB").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+
+                {
+                    Message msg = new Message("TopicTest3",// topic
+                            "TagC",// tag
+                            "OrderID061",// key
+                            ("Hello MetaQC").getBytes());// body
+                    SendResult sendResult = producer.send(msg);
+                    System.out.println(sendResult);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            TimeUnit.MILLISECONDS.sleep(1000);
+        }
+
+        /**
+         * 应用退出时，要调用shutdown来清理资源，关闭网络连接，从MetaQ服务器上注销自己
+         * 注意：我们建议应用在JBOSS、Tomcat等容器的退出钩子里调用shutdown方法
+         */
+        // producer.shutdown();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                producer.shutdown();
+            }
+        }));
+        System.exit(0);
+    }
+}</code></pre>
+<h4 class="md-inpage-anchor">b.消费者<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/RocketMQ.md#b.%E6%B6%88%E8%B4%B9%E8%80%85" target="_blank" rel="noopener">⚓</a></span></h4>
+<pre><code>package com.autonavi.rocketmq.service;
+
+import java.util.List;
+
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.common.message.MessageExt;
+
+public class Consumer {
+    /**
+     * 当前例子是PushConsumer用法，使用方式给用户感觉是消息从RocketMQ服务器推到了应用客户端。&lt;br&gt;
+     * 但是实际PushConsumer内部是使用长轮询Pull方式从MetaQ服务器拉消息，然后再回调用户Listener方法&lt;br&gt;
+     */
+    public static void main(String[] args) throws InterruptedException,
+            MQClientException {
+        /**
+         * 一个应用创建一个Consumer，由应用来维护此对象，可以设置为全局对象或者单例&lt;br&gt;
+         * 注意：ConsumerGroupName需要由应用来保证唯一
+         */
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(
+                "ConsumerGroupName");
+        consumer.setNamesrvAddr("192.168.92.130:9876");
+        consumer.setInstanceName("Consumber");
+
+        /**
+         * 订阅指定topic下tags分别等于TagA或TagC或TagD
+         */
+        consumer.subscribe("TopicTest1", "TagA || TagC || TagD");
+        /**
+         * 订阅指定topic下所有消息&lt;br&gt;
+         * 注意：一个consumer对象可以订阅多个topic
+         */
+        consumer.subscribe("TopicTest2", "*");
+
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+
+            public ConsumeConcurrentlyStatus consumeMessage(
+                    List&lt;MessageExt&gt; msgs, ConsumeConcurrentlyContext context) {
+
+                System.out.println(Thread.currentThread().getName()
+                        + " Receive New Messages: " + msgs.size());
+
+                MessageExt msg = msgs.get(0);
+                if (msg.getTopic().equals("TopicTest1")) {
+                    // 执行TopicTest1的消费逻辑
+                    if (msg.getTags() != null &amp;&amp; msg.getTags().equals("TagA")) {
+                        // 执行TagA的消费
+                        System.out.println(new String(msg.getBody()));
+                    } else if (msg.getTags() != null
+                            &amp;&amp; msg.getTags().equals("TagC")) {
+                        // 执行TagC的消费
+                        System.out.println(new String(msg.getBody()));
+                    } else if (msg.getTags() != null
+                            &amp;&amp; msg.getTags().equals("TagD")) {
+                        // 执行TagD的消费
+                        System.out.println(new String(msg.getBody()));
+                    }
+                } else if (msg.getTopic().equals("TopicTest2")) {
+                    System.out.println(new String(msg.getBody()));
+                }
+
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+
+            }
+        });
+
+        /**
+         * Consumer对象在使用之前必须要调用start初始化，初始化一次即可&lt;br&gt;
+         */
+        consumer.start();
+
+        System.out.println("ConsumerStarted.");
+    }
+}</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/rocketmq集群搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/rocketmq集群搭建/" itemprop="url">RocketMQ集群安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
+<li>支持严格的消息顺序</li>
+<li>支持Topic与Queue两种模式</li>
+<li>支持事物</li>
+<li>亿级消息堆积能力</li>
+<li>同时支持Push与Pull方式消费消息</li>
+<li>高吞吐、高可用、低延迟、易扩展、分布式</li>
+<li><p>组件全长连接</p>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1></li>
+<li><p>Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息；支持同步、异步、one-way模式</p>
+</li>
+<li>Producer Group：Producer的集合名称，这类Producer通常发送一类消息，且发送逻辑一致</li>
+<li>Consumer：消息消费者，负责消费消息，一般是后台系统负责异步消费</li>
+<li>Consumer Group：Consumer的集合名称，这类Consumer通常消费一类消息，且消费逻辑一致；同组的consumer可均衡及故障转移</li>
+<li>PullConsumer：Consumer的一种，应用通常主动调用Consumer的拉消息方法从Broker拉消息，主动权由应用控制</li>
+<li>PushConsumer：Consumer的一种，应用通常向Consumer对象注册一个Listener 接口，一旦收到消息，Consumer对象立刻回调 Listener 接口方法</li>
+<li>Topic：消息通道，逻辑上区分消息发送目的与消息接收源</li>
+<li>Message：传递的被封装的信息；RocketMQ默认通过轮询broker集群中所有broker上的同topic的所有队列的方式来确定消息被发送到哪一个队列</li>
+<li>Message Queue：Topic逻辑上分成几个子通道，每个子通道即为消息队列；主要是为了高并发及故障冗余</li>
+<li>Tag：带标签的消息队列</li>
+<li>Broker：消息中转站，从producer接收并存储消息，向consumer提供服务；还会记录消息消费的数据，比如消费组，消费位置，队列信息等</li>
+<li>Name Server：名称服务，生产者/消费者查询此服务获取包含对应topic的broker</li>
+<li>Message Model：消费模型；Clustering模型指一个 Consumer Group中的Consumer实例平均分摊消费消息；Broadcasting指一条消息被多个 Consumer 消费，即使这些 Consumer 属于同一个 Consumer Group，消息也会被 Consumer Group 中的每个 Consumer 都消费一次</li>
+<li>Message Order：消费顺序；Orderly指严格按照消息产生的顺序消费；Concurrently指并发消费，消费的消息顺序可能会打乱</li>
+</ul>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><ul>
+<li><p>name server:</p>
+<p>  提供轻量级服务发现与路由服务，接受Broker注册信息并通过心跳检查broker是否存活；接受客户端查询broker与queue请求；无状态，建议部署2个以上实例</p>
+</li>
+<li><p>broker:</p>
+<p>  消息接收、存储、发送、查询、HA主从同步；Broker分为Master与Slave，一个Master可以对应多个Slave，但是一个Slave只能对应一个Master，Master与Slave的对应关系通过指定相同的BrokerName，不同的BrokerId来定义，BrokerId为0表示Master，非0表示Slave。Master也可以部署多个。每个Broker与NameServer集群中的所有节点建立长连接，定时注册Topic信息到所有NameServer。至少2个主实例</p>
+</li>
+<li><p>Producer Group:</p>
+<p>  用来表示一个发送消息应用，一个Producer Group下包含多个Producer实例，可以是多台机器，也可以是一台机器的多个进程，或者一个进程的多个Producer对象。一个Producer Group可以发送多个Topic消息，Producer Group作用如下：</p>
+<ol>
+<li>标识一类Producer</li>
+<li>可以通过运维工具查询这个发送消息应用下有多个Producer实例</li>
+<li>发送分布式事务消息时，如果Producer中途意外宕机，Broker会主动回调Producer Group内的任意一台机器来确认事务状态。</li>
+</ol>
+</li>
+<li><p>Consumer Group: </p>
+<p>  用来表示一个消费消息应用，一个Consumer Group下包含多个Consumer实例，可以是多台机器，也可以是多个进程，或者是一个进程的多个Consumer对象。一个Consumer Group下的多个Consumer以均摊方式消费消息，如果设置为广播方式，那么这个Consumer Group下的每个实例都消费全量数据。</p>
+</li>
+<li><p>Producer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master建立长连接，且定时向Master发送心跳。Producer完全无状态，可集群部署。</p>
+</li>
+<li><p>Consumer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master、Slave建立长连接，且定时向Master、Slave发送心跳。Consumer既可以从Master订阅消息，也可以从Slave订阅消息，订阅规则由Broker配置决定</p>
+</li>
+</ul>
+<p>结构图<br>部署结构图</p>
+<h1 id="broke部署模型"><a href="#broke部署模型" class="headerlink" title="broke部署模型"></a>broke部署模型</h1><ul>
+<li><p>单Master模式:</p>
+<p>  优点：除了配置简单没什么优点</p>
+<p>  缺点：不可靠，该机器重启或宕机，将导致整个服务不可用</p>
+</li>
+<li><p>多Master模式:</p>
+<p>  优点：配置简单，性能最高</p>
+<p>   缺点：可能会有少量消息丢失(异步刷盘)，单台机器重启或宕机期间，该机器下未被消费的消息在机器恢复前不可订阅，影响消息实时性</p>
+</li>
+<li><p>多Master多Slave模式(异步复制)</p>
+<p>  优点：性能同多Master几乎一样，实时性高，主备间切换对应用透明，不需人工干预;Master宕机，消费者可以从Slave上进行消费</p>
+<p>  缺点：异步复制的方式，主备之间短暂延迟，MS级别;Master宕机或磁盘损坏时会有少量消息丢失</p>
+</li>
+<li><p>多Master多Slave模式(同步双写)：</p>
+<p>  优点：服务可用性与数据可用性非常高,Master/Slave都写成功的前提下,向应用返回成功</p>
+<p>  缺点：同步的性能比异步稍低</p>
+</li>
+</ul>
+<h1 id="部署测试"><a href="#部署测试" class="headerlink" title="部署测试"></a>部署测试</h1><h2 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h2><pre><code>ip    主机名    角色
+10.0.4.56    node1    nameserver/broker master
+10.0.4.57    node2    nameserver/broker master
+</code></pre><h2 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h2><pre><code>tar xf jdk-8u121-linux-x64.tar.gz -C /usr/local
+mv /usr/local/jdk1.8.0_121 /usr/local/jdk1.8
+cat &gt; /etc/profile.d/java.sh  &lt;&lt; @
+JAVA_HOME=/usr/local/jdk1.8
+JRE_HOME=$JAVA_HOME/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:.
+export JAVA_HOME JRE_HOME PATH CLASSPATH
+@
+source  /etc/profile.d/java.sh
+java -version
+</code></pre><h2 id="下载安装rocketmq（node1节点）"><a href="#下载安装rocketmq（node1节点）" class="headerlink" title="下载安装rocketmq（node1节点）"></a>下载安装rocketmq（node1节点）</h2><pre><code>##安装maven3.2以上版本
+wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+tar xf apache-maven-3.5.0-bin.tar.gz
+mv apache-maven-3.5.0 /usr/local/maven3
+ln -svf /usr/local/maven3/bin/mvn /usr/local/bin/mvn
+
+##使用阿里云的仓库
+vim /usr/local/maven3/conf/settings.xml
+...
+&lt;mirror&gt;
+  &lt;id&gt;alimaven&lt;/id&gt;
+  &lt;name&gt;aliyun maven&lt;/name&gt;
+  &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+  &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
+
+##编译
+git clone  https://github.com/apache/incubator-rocketmq.git
+cd incubator-rocketmq
+mvn -Prelease-all -DskipTests clean install -U
+
+cd distribution/target
+mv apache-rocketmq /usr/local/rocketmq
+
+##将编译好的包传到其它机器上
+rsync -avP  apache-rocketmq.tar.gz root@10.0.4.57:/usr/local/src
+
+#node2上操作
+cd /usr/local/src
+mkdir -pv /usr/local/rocketmq
+tar xf apache-rocketmq.tar.gz  -C /usr/local/rocketmq
+</code></pre><h2 id="启动nameserver（node1、node2节点）"><a href="#启动nameserver（node1、node2节点）" class="headerlink" title="启动nameserver（node1、node2节点）"></a>启动nameserver（node1、node2节点）</h2><pre><code>#修改日志路径，默认家目录下logs目录，不合适
+cd /usr/local/rocketmq/conf
+sed -i &apos;s@${user.home}@/usr/local/rocketmq@&apos; logback_*
+
+##调整jvm内存
+cd /usr/local/rocketmq/bin
+vim runserver.sh
+JAVA_OPT=&quot;${JAVA_OPT} -server -Xms2g -Xmx2g -XX:PermSize=256m -Xmn1g -XX:MaxPermSize=256m&quot;
+
+#启动
+nohup ./mqnamesrv &amp;
+
+#日志
+tail ../logs/rocketmqlogs/namesrv.log
+</code></pre><h2 id="node1启动broker"><a href="#node1启动broker" class="headerlink" title="node1启动broker"></a>node1启动broker</h2><pre><code>cd /usr/local/rocketmq/conf
+vim 2m-noslave/broker-a.properties
+##############################################
+
+#多网卡机器可能存在识别错误的情况，可手动设置监听IP
+#brokerIP1=10.0.4.56
+#监听端口；默认10911
+listenPort=10911
+#broker所属集群，用于broker负载均衡和避免单点故障；默认DefaultCluster
+brokerClusterName=touna-rocketmq
+#broker名称，有主从关系的具有相同的brokerName，不同的brokerId；
+brokerName=broker-a
+#brokerId为0表示主，非0整数表示从；默认0
+brokerId=0
+#nameserver地址
+namesrvAddr=10.0.4.56:9876;10.0.4.57:9876;
+#是否允许Broker自动创建Topic，建议线下开启，线上关闭；若开启则此TOPIC消息都会发给固定一台broker，达不到负载均衡目的；默认true
+autoCreateTopicEnable=false
+#是否允许Broker自动创建订阅组，建议线下开启，线上关闭；默认true
+autoCreateSubscriptionGroup=false
+#是否从web服务器获取Name Server地址，针对大规模的Broker集群建议使用这种方式；默认false
+fetchNamesrvAddrByAddressServer=true
+#
+mapedFileSizeCommitLog=1073741824
+#文件删除时间点；默认凌晨4点
+deleteWhen=04
+#文件保留时间，单位小时；默认48小时
+fileReservedTime=168
+#磁盘空间最大使用率；默认75%
+diskMaxUsedSpaceRatio=90
+#磁盘满、且无过期文件情况下TRUE表示强制删除文件，优先保证服务可用
+#FALSE 标记服务不可用，文件不删除
+cleanFileForciblyEnable=true
+#存储根目录
+storePathRootDir=/data/db/rocketmq
+#commitLog存储目录；默认$HOME/store/commitlog
+storePathCommitLog=/data/db/rocketmq/commitlog
+#消费队列存储路径；默认$HOME/store/consumequeue
+storePathConsumerQueue=/data/db/rocketmq/consumequeue
+#角色 ASYNC_MASTER(异步复制) SYNC_MASTER(同步复制双写) SLAVE（从库）
+brokerRole=ASYNC_MASTER
+# 刷盘方式，ASYNC_FLUSH（异步） SYNC_FLUSH（同步）
+flushDiskType=ASYNC_FLUSH
+##############################################
+
+
+#根据实际情况调整下jvm内存
+vim ../bin/runbroker.sh
+
+#启动
+nohup bin/mqbroker -c conf/2m-noslave/broker-a.properties &amp;
+</code></pre><h2 id="node2启动broker"><a href="#node2启动broker" class="headerlink" title="node2启动broker"></a>node2启动broker</h2><pre><code>cd /usr/local/rocketmq/conf
+vim 2m-noslave/broker-b.properties
+##############################################
+
+#多网卡机器可能存在识别错误的情况，可手动设置监听IP
+#brokerIP1=10.0.4.57
+#监听端口；默认10911
+listenPort=10911
+#broker所属集群，用于broker负载均衡和避免单点故障；默认DefaultCluster
+brokerClusterName=touna-rocketmq
+#broker名称，有主从关系的具有相同的brokerName，不同的brokerId；
+brokerName=broker-b
+#brokerId为0表示主，非0整数表示从；默认0
+brokerId=0
+#nameserver地址
+namesrvAddr=10.0.4.56:9876;10.0.4.57:9876;
+#是否允许Broker自动创建Topic，建议线下开启，线上关闭；若开启则此TOPIC消息都会发给固定一台broker，达不到负载均衡目的；默认true
+autoCreateTopicEnable=false
+#是否允许Broker自动创建订阅组，建议线下开启，线上关闭；默认true
+autoCreateSubscriptionGroup=false
+#是否从web服务器获取Name Server地址，针对大规模的Broker集群建议使用这种方式；默认false
+fetchNamesrvAddrByAddressServer=true
+#
+mapedFileSizeCommitLog=1073741824
+#文件删除时间点；默认凌晨4点
+deleteWhen=04
+#文件保留时间，单位小时；默认48小时
+fileReservedTime=168
+#磁盘空间最大使用率；默认75%
+diskMaxUsedSpaceRatio=90
+#磁盘满、且无过期文件情况下TRUE表示强制删除文件，优先保证服务可用
+#FALSE 标记服务不可用，文件不删除
+cleanFileForciblyEnable=true
+#存储根目录
+storePathRootDir=/data/db/rocketmq
+#commitLog存储目录；默认$HOME/store/commitlog
+storePathCommitLog=/data/db/rocketmq/commitlog
+#消费队列存储路径；默认$HOME/store/consumequeue
+storePathConsumerQueue=/data/db/rocketmq/consumequeue
+#角色 ASYNC_MASTER(异步复制) SYNC_MASTER(同步复制双写) SLAVE（从库）
+brokerRole=ASYNC_MASTER
+# 刷盘方式，ASYNC_FLUSH（异步） SYNC_FLUSH（同步）
+flushDiskType=ASYNC_FLUSH
+##############################################
+
+
+#根据实际情况调整下jvm内存
+vim ../bin/runbroker.sh
+
+#启动
+nohup bin/mqbroker -c conf/2m-noslave/broker-b.properties &amp;
+</code></pre><h2 id="收发测试"><a href="#收发测试" class="headerlink" title="收发测试"></a>收发测试</h2><pre><code>export NAMESRV_ADDR=&apos;10.0.4.56:9876;10.0.4.57:9876&apos;
+
+#创建测试的topic
+bin//mqadmin  updateTopic -n 10.0.4.56:9876 -c touna-rocketmq -t TopicTest
+
+#生产消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+
+#消费消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+</code></pre><h2 id="关闭nameserver、broker"><a href="#关闭nameserver、broker" class="headerlink" title="关闭nameserver、broker"></a>关闭nameserver、broker</h2><pre><code>sh bin/mqshutdown broker
+sh bin/mqshutdown namesrv
+</code></pre><h2 id="管理工具"><a href="#管理工具" class="headerlink" title="管理工具"></a>管理工具</h2><pre><code>mqadmin
+mqadmin help &lt;command&gt;
+</code></pre><h2 id="producers-consumers查找nameserver的方式-优先级依次降低"><a href="#producers-consumers查找nameserver的方式-优先级依次降低" class="headerlink" title="producers/consumers查找nameserver的方式(优先级依次降低)"></a>producers/consumers查找nameserver的方式(优先级依次降低)</h2><ol>
+<li><p>编程方式:</p>
+<p> producer.setNamesrvAddr(“name-server1-ip:port;name-server2-ip:port”)</p>
+<p> consumer.setNamesrvAddr(“name-server1-ip:port;name-server2-ip:port”)</p>
+</li>
+<li><p>传java参数</p>
+<p> -Drocketmq.namesrv.addr=10.0.4.56:9876;10.0.4.57:9876</p>
+</li>
+<li><p>设置环境变量NAMESRV_ADDR</p>
+<p> export NAMESRV_ADDR=’10.0.4.56:9876;10.0.4.57:9876</p>
+</li>
+<li><p>http接口(需要设置nginx，客户端改hosts)</p>
+<p> 访问<a href="http://jmenv.tbsite.net:8080/rocketmq/nsaddr得到类似10.0.4.56:9876;10.0.4.57:9876的结果" target="_blank" rel="noopener">http://jmenv.tbsite.net:8080/rocketmq/nsaddr得到类似10.0.4.56:9876;10.0.4.57:9876的结果</a></p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/redis-HA集群配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/redis-HA集群配置/" itemprop="url">redis-HA集群配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h1><pre><code>[root@redis01-bi ~]# cat /etc/redhat-release
+CentOS release 6.5 (Final)
+
+[root@redis01-bi ~]# uname -a
+Linux redis01-bi 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC 2013 x86_64 x86_64 x86_64 GNU/Linu
+
+[root@redis01-bi ~]# getenforce
+Disabled
+
+[root@redis01-bi ~]# runlevel;chkconfig --list|grep 3:on  
+N 3
+crond   0:off   1:off   2:on3:on4:on5:on6:off
+network 0:off   1:off   2:on3:on4:on5:on6:off
+rsyslog 0:off   1:off   2:on3:on4:on5:on6:off
+sshd0:off   1:off   2:on3:on4:on5:on6:off
+
+[root@redis01-bi ~]# crontab -l
+0 */1 * * * /usr/sbin/ntpdate 172.17.16.20 &amp;&gt; /dev/null &amp;&amp; hwclock -w
+
+[root@redis01-bi ~]#echo &apos;unset MAILCHECK&apos; &gt;&gt; /etc/profile&amp;&amp;source /etc/profile
+</code></pre><h1 id="安装配置redis主从"><a href="#安装配置redis主从" class="headerlink" title="安装配置redis主从"></a>安装配置redis主从</h1><ul>
+<li><p>集群环境</p>
+<pre><code>主机名    ip    用途
+
+localhost    172.30.18.109    redis sentinel仲裁节点
+
+   redis01-bi    172.30.18.115    redis 主节点;redis sentinel仲裁节点
+
+   redis02-bi    172.30.19.112    redis 从节点;redis sentinel仲裁节点
+</code></pre></li>
+<li><p>系统参数调整(主要调整监听队列)</p>
+<pre><code>cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END
+net.core.netdev_max_backlog=16384
+net.ipv4.tcp_max_syn_backlog=8192
+net.core.somaxconn=8192
+net.ipv4.ip_local_port_range=1024 65535
+net.ipv4.tcp_tw_reuse=1
+net.ipv4.tcp_tw_recycle=0
+net.ipv4.tcp_timestamps=1
+net.ipv4.tcp_keepalive_time=300
+net.ipv4.tcp_keepalive_intvl=30
+net.ipv4.tcp_fin_timeout = 5
+vm.overcommit_memory=1
+
+END
+
+sysctl -p
+</code></pre></li>
+<li><p>编译安装redis</p>
+<pre><code>cd /usr/local/src
+wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+
+yum -y install jemalloc-devel make gcc
+tar xf redis-3.2.8.tar.gz
+cd redis-3.2.8
+make  MALLOC=jemalloc PREFIX=/usr/local/appserver/redis3 install
+</code></pre></li>
+<li><p>修改配置</p>
+<pre><code>mkdir -pv /data/logs/app/redis  /data/db/redis /usr/local/appserver/redis3/etc
+cp sentinel.conf redis.conf /usr/local/appserver/redis3/etc/
+cd /usr/local/appserver/redis3/etc/
+
+#redis主
+cat &gt; redis.conf &lt;&lt;END
+bind 127.0.0.1 172.30.18.115
+protected-mode no
+port 6379
+tcp-backlog 4096
+timeout 0
+tcp-keepalive 300
+daemonize yes
+supervised no
+pidfile /data/logs/app/redis/redis.pid
+loglevel notice
+logfile &quot;/data/logs/app/redis/redis.log&quot;
+databases 16
+save 900 1
+save 300 10
+save 60 10000
+stop-writes-on-bgsave-error yes
+rdbcompression yes
+rdbchecksum yes
+dbfilename dump.rdb
+dir /data/db/redis
+masterauth bi-redis-cache
+slave-serve-stale-data yes
+slave-read-only yes
+repl-diskless-sync no
+repl-diskless-sync-delay 5
+repl-disable-tcp-nodelay no
+repl-backlog-size 128mb
+repl-backlog-ttl 1800
+slave-priority 100
+requirepass bi-redis-cache
+#rename-command CONFIG &quot;&quot;
+rename-command FLUSHALL &quot;&quot;
+maxclients 10000
+maxmemory 2500m
+maxmemory-policy allkeys-lru
+appendonly no
+appendfilename &quot;appendonly.aof&quot;
+appendfsync everysec
+no-appendfsync-on-rewrite no
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+aof-load-truncated yes
+lua-time-limit 5000
+slowlog-log-slower-than 1000000
+slowlog-max-len 32
+latency-monitor-threshold 0
+notify-keyspace-events &quot;&quot;
+hash-max-ziplist-entries 512
+hash-max-ziplist-value 64
+list-max-ziplist-size -2
+list-compress-depth 0
+set-max-intset-entries 512
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+hll-sparse-max-bytes 3000
+activerehashing yes
+client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit slave 256mb 64mb 60
+client-output-buffer-limit pubsub 32mb 8mb 60
+hz 10
+aof-rewrite-incremental-fsync yes
+END
+</code></pre></li>
+</ul>
+<pre><code>#redis从
+cat &gt; redis.conf &lt;&lt;END
+#监听的IP，不同机器注意修改
+bind 127.0.0.1 172.30.19.112
+protected-mode no
+port 6379
+tcp-backlog 4096
+timeout 0
+tcp-keepalive 300
+daemonize yes
+supervised no
+pidfile /data/logs/app/redis/redis.pid
+loglevel notice
+logfile &quot;/data/logs/app/redis/redis.log&quot;
+databases 16
+save 900 1
+save 300 10
+save 60 10000
+stop-writes-on-bgsave-error yes
+rdbcompression yes
+rdbchecksum yes
+dbfilename dump.rdb
+dir /data/db/redis
+#同步认证密码，需等同requirepass的值
+masterauth bi-redis-cache
+slave-serve-stale-data yes
+slave-read-only yes
+#从比主多了个slaveof指令
+slaveof 172.30.18.115 6379
+repl-diskless-sync no
+repl-diskless-sync-delay 5
+repl-disable-tcp-nodelay no
+repl-backlog-size 128mb
+repl-backlog-ttl 1800
+slave-priority 100
+#设置认证密码
+requirepass bi-redis-cache
+#不要重写config指令，遇到坑，设置后无法切换
+#rename-command CONFIG &quot;&quot;
+rename-command FLUSHALL &quot;&quot;
+maxclients 10000
+#总共4G内存，一般设置为物理内存的2/3左右，因为快照或AOF重写使用fork机制，最多会用到2倍的内存
+maxmemory 2500m
+maxmemory-policy allkeys-lru
+appendonly no
+appendfilename &quot;appendonly.aof&quot;
+appendfsync everysec
+no-appendfsync-on-rewrite no
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+aof-load-truncated yes
+lua-time-limit 5000
+slowlog-log-slower-than 1000000
+slowlog-max-len 32
+latency-monitor-threshold 0
+notify-keyspace-events &quot;&quot;
+hash-max-ziplist-entries 512
+hash-max-ziplist-value 64
+list-max-ziplist-size -2
+list-compress-depth 0
+set-max-intset-entries 512
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+hll-sparse-max-bytes 3000
+activerehashing yes
+client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit slave 256mb 64mb 60
+client-output-buffer-limit pubsub 32mb 8mb 60
+hz 10
+aof-rewrite-incremental-fsync yes
+END
+</code></pre><ul>
+<li>启动</li>
+</ul>
+<pre><code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled
+/usr/local/appserver/redis3/bin/redis-server /usr/local/appserver/redis3/etc/redis.conf
+cat &gt;&gt; /etc/rc.local &lt;&lt;END
+echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled
+#start redis
+/usr/local/appserver/redis3/bin/redis-server /usr/local/appserver/redis3/etc/redis.conf
+END
+</code></pre><ul>
+<li><p>测试观察</p>
+<pre><code>/usr/local/appserver/redis3/bin/redis-cli -a bi-redis-cache -h 172.30.18.115 -p 6379 set test mytest
+/usr/local/appserver/redis3/bin/redis-cli -a bi-redis-cache -h 172.30.19.112 -p 6379 get test
+/usr/local/appserver/redis3/bin/redis-cli -a bi-redis-cache -h 172.30.18.115 -p 6379 del test
+/usr/local/appserver/redis3/bin/redis-cli -a bi-redis-cache -h 172.30.18.115 -p 6379 info- 
+</code></pre></li>
+<li><p>配置sentinel HA</p>
+<pre><code>cd /usr/local/appserver/redis3/etc
+cat &gt;  sentinel.conf  &lt;&lt; END
+#绑定ip,不同机器注意修改，不同机器只有此配置不同；注意不要多绑定个127.0.0.1，会找不到其它sentinel
+bind 172.30.18.115
+protected-mode no
+#端口
+port 26379
+#临时工作目录
+dir /tmp
+#监控的HA集群名称及对应的主服务器IP/端口，最少投票数才能进入O_DOWNv状态
+sentinel monitor bicache 172.30.18.115 6379 2
+#连接redis主库的认证密码
+sentinel auth-pass bicache bi-redis-cache
+#持续多久主库无响应视为挡掉，进入S_DOWNv状态
+sentinel down-after-milliseconds bicache 20000
+#主从切换后同时同步的从库数
+sentinel parallel-syncs bicache 1
+#取消尚未做配置变更的故障转移、重新做故障转移，从重新指向正确的主库等的超时时间
+sentinel failover-timeout bicache 180000
+#输出日志到文件
+logfile &quot;/data/logs/app/redis/sentinel.log&quot;
+END
+
+#启动
+nohup /usr/local/appserver/redis3/bin/redis-sentinel /usr/local/appserver/redis3/etc/sentinel.conf &amp;
+
+#开机启动
+echo &apos;nohup /usr/local/appserver/redis3/bin/redis-sentinel /usr/local/appserver/redis3/etc/sentinel.conf &amp;&apos; &gt;&gt; /etc/rc.local
+
+#观察验证
+/usr/local/appserver/redis3/bin/redis-cli -h 172.30.18.115 -p 26379 info sentinel
+/usr/local/appserver/redis3/bin/redis-cli -h 172.30.18.115 -p 26379 SENTINEL sentinels bicache
+</code></pre></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/mysql安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/mysql安装/" itemprop="url">MYSQL安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p></p><h1>1.介质准备</h1><br>1、准备mysql安装包 <code>mysql-5.7.16-linux-glibc2.5-x86_64.tar</code><p></p>
+<p></p><h1 class="md-inpage-anchor">2.安装<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#2.%E5%AE%89%E8%A3%85" target="_blank" rel="noopener">⚓</a></span></h1><p></p>
+<p></p><h2 class="md-inpage-anchor">A.将文件上传至home目录下<span class="anchor-highlight" style="display: none;"><a href="#">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p></p><h2 class="md-inpage-anchor">B.解压文件<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#B.%E8%A7%A3%E5%8E%8B%E6%96%87%E4%BB%B6" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p><pre><code>[root@localhost home]# tar -xvf mysql-5.7.16-linux-glibc2.5-x86_64.tar<br>mysql-5.7.16-linux-glibc2.5-x86_64.tar.gz<br>mysql-test-5.7.16-linux-glibc2.5-x86_64.tar.gz<br>[root@localhost home]# tar -xzvf mysql-5.7.16-linux-glibc2.5-x86_64.tar.gz<br>[root@localhost home]# ls<br>mysql-5.7.16-linux-glibc2.5-x86_64  mysql-5.7.16-linux-glibc2.5-x86_64.tar  mysql-5.7.16-linux-glibc2.5-x86_64.tar.gz  mysql-test-5.7.16-linux-glibc2.5-x86_64.tar.gz<br>[root@localhost home]# mv  mysql-5.7.16-linux-glibc2.5-x86_64 mysql<br>[root@localhost home]# cd mysql<br>[root@localhost mysql]# ./bin/mysqld –user=mysql –basedir=/home/mysql –datadir=/home/mysql/data –initialize<br>2016-12-02T13:51:19.368344Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use –explicit_defaults_for_timestamp server option (see documentation for more details).<br>2016-12-02T13:51:20.000876Z 0 [Warning] InnoDB: New log files created, LSN=45790<br>2016-12-02T13:51:20.169564Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.<br>2016-12-02T13:51:20.310408Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 678a5701-b896-11e6-b9af-000c295c26a8.<br>2016-12-02T13:51:20.312855Z 0 [Warning] Gtid table is not ready to be used. Table ‘mysql.gtid_executed’ cannot be opened.<br>2016-12-02T13:51:20.322842Z 1 [Note] A temporary password is generated for root@localhost: pd6jKVCBaU_u<br>[root@localhost mysql]# vi ./support-files/mysql.server</code></pre></p>
+<p></p><p><div class="md-text">mysql的文件夹目录为：/home/mysql/</div></p><p></p>
+<p></p><p><div class="md-text"> 修改参数值：</div></p><p></p>
+<p><pre><code>—————-<br>[mysqld]<br>basedir=/home/mysql<br>datadir=/home/mysql/data<br>character_set_server=utf8<br>init_connect=’SET NAMES utf8’</code></pre></p>
+<p>[client]<br>default-character-set=utf8<br>—————-</p>
+<p></p><p><div class="md-text">添加软连接</div></p><p></p>
+<p><pre><code>ln -s /home/mysql/bin/mysql /usr/bin/mysql</code></pre></p>
+<p></p><p><div class="md-text">移动my.cnf到启动目录</div></p><p></p>
+<p><pre><code>cp /home/mysql/support-files/my-default.cnf /etc/my.cnf</code></pre></p>
+<p></p><p><div class="md-text">配置mysql服务开机自动启动</div></p><p></p>
+<p><pre><code>cp /home/mysql/support-files/mysql.server /etc/init.d/mysqld<br>chmod 755 /etc/init.d/mysqld</code></pre></p>
+<p></p><p><div class="md-text">检查自启动项列表中没有mysqld这个，如果没有就添加mysqld：</div></p><p></p>
+<p><pre><code># chkconfig –list mysqld</code></pre></p>
+<h1 id="chkconfig-–add-mysqld"><a href="#chkconfig-–add-mysqld" class="headerlink" title="chkconfig –add mysqld"></a>chkconfig –add mysqld</h1><h1 id="chkconfig-–level-345-mysqld-on"><a href="#chkconfig-–level-345-mysqld-on" class="headerlink" title="chkconfig –level 345 mysqld on"></a>chkconfig –level 345 mysqld on</h1><p>或用这个命令设置开机启动：</p>
+<h1 id="chkconfig-mysqld-on"><a href="#chkconfig-mysqld-on" class="headerlink" title="chkconfig mysqld on"></a>chkconfig mysqld on</h1><p></p><h1 class="md-inpage-anchor">3. 启动<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#3._%E5%90%AF%E5%8A%A8" target="_blank" rel="noopener">⚓</a></span></h1><p></p>
+<p><pre><code>启动mysql服务</code></pre></p>
+<h1 id="service-mysqld-start"><a href="#service-mysqld-start" class="headerlink" title="service mysqld start"></a>service mysqld start</h1><p>重启mysql服务</p>
+<h1 id="service-mysqld-restart"><a href="#service-mysqld-restart" class="headerlink" title="service mysqld restart"></a>service mysqld restart</h1><p>停止mysql服务</p>
+<h1 id="service-mysqld-stop"><a href="#service-mysqld-stop" class="headerlink" title="service mysqld stop"></a>service mysqld stop</h1><p></p><p><div class="md-text">好家伙，起来了：</div></p><p></p>
+<p><pre><code>[root@localhost mysql]# ./support-files/mysql.server start<br>Starting MySQL SUCCESS!</code></pre></p>
+<p></p><h1 class="md-inpage-anchor">4.修改密码<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#4.%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81" target="_blank" rel="noopener">⚓</a></span></h1><p></p>
+<p></p><h2 class="md-inpage-anchor">A. 停止服务<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#A._%E5%81%9C%E6%AD%A2%E6%9C%8D%E5%8A%A1" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="----------">[ ↑ ]</a><p></p>
+<p><pre><code>[root@bogon mysql]# service mysqld stop<br>Shutting down MySQL.. SUCCESS!</code></pre></p>
+<p></p><h2 class="md-inpage-anchor">B.安全模式启动<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#B.%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F%E5%90%AF%E5%8A%A8" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p></p><p><div class="md-text">==./bin/mysqld_safe –skip-grant-tables –skip-networking&amp;==</div></p><p></p>
+<p><pre><code>[root@bogon mysql]# ./bin/mysqld_safe –skip-grant-tables –skip-networking&amp;<br>[1] 6162<br>[root@bogon mysql]# 2016-12-03T09:05:58.107100Z mysqld_safe Logging to ‘/home/mysql/data/bogon.err’.<br>2016-12-03T09:05:58.145923Z mysqld_safe Starting mysqld daemon with databases from /home/mysql/data</code></pre></p>
+<p></p><h2 class="md-inpage-anchor">C.新打开一个连接终端<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#C.%E6%96%B0%E6%89%93%E5%BC%80%E4%B8%80%E4%B8%AA%E8%BF%9E%E6%8E%A5%E7%BB%88%E7%AB%AF" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p><pre><code>[root@bogon ~]# mysql -u root mysql<br>mysql&gt;<br>mysql&gt; use mysql;<br>mysql&gt; UPDATE user SET authentication_string=PASSWORD(‘000000’) WHERE user=’root’;<br>Query OK, 1 row affected, 1 warning (0.00 sec)<br>Rows matched: 1  Changed: 1  Warnings: 1<br>mysql&gt; exit;</code></pre></p>
+<p></p><h2 class="md-inpage-anchor">D.停止前面启动终端，ctrl+c<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#D.%E5%81%9C%E6%AD%A2%E5%89%8D%E9%9D%A2%E5%90%AF%E5%8A%A8%E7%BB%88%E7%AB%AF%EF%BC%8Cctrl+c" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p></p><p><div class="md-text">重新启动</div></p><p></p>
+<p><pre><code>service mysqld start</code></pre></p>
+<p></p><h2 class="md-inpage-anchor">E.修改远程登录权限<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#E.%E4%BF%AE%E6%94%B9%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E6%9D%83%E9%99%90" target="_blank" rel="noopener">⚓</a></span></h2><a class="visible-xs visible-sm jumplink" href="#">[ ↑ ]</a><p></p>
+<p><pre><code>[root@bogon mysql]# ./bin/mysqladmin -u root -p password<br>Enter password:<br>New password:<br>Confirm new password:<br>Warning: Since password will be sent to server in plain text, use ssl connection to ensure password safety.<br>[root@bogon mysql]# mysql -u root -p<br>Enter password:<br>Welcome to the MySQL monitor.  Commands end with ; or \g.<br>Your MySQL connection id is 4<br>Server version: 5.7.16 MySQL Community Server (GPL)<br>Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.<br>Oracle is a registered trademark of Oracle Corporation and/or its<br>affiliates. Other names may be trademarks of their respective<br>owners.<br>Type ‘help;’ or ‘\h’ for help. Type ‘\c’ to clear the current input statement.<br>mysql&gt;grant all privileges on <em>.</em> to ‘root‘@’%’ identified by ‘000000’;<br>Query OK, 0 rows affected, 1 warning (0.00 sec)<br>mysql&gt; FLUSH PRIVILEGES;<br>Query OK, 0 rows affected (0.00 sec)<br>mysql&gt;</code></pre></p>
+<p></p><p><div class="md-text">主要命令</div></p><p></p>
+<p><pre><code>grant all privileges on <em>.</em> to ‘root‘@’%’ identified by ‘000000’;<br>FLUSH PRIVILEGES;</code></pre></p>
+<p></p><h1 class="md-inpage-anchor">5. 开启防火墙3306端口<span class="anchor-highlight" style="display: none;"><a href="http://10.0.4.82:72/#!study/mysql-setup.md#5._%E5%BC%80%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%993306%E7%AB%AF%E5%8F%A3" target="_blank" rel="noopener">⚓</a></span></h1><p></p>
+<p></p><p><div class="md-text">==不然不能进行远程访问==</div></p><p></p>
+<p><pre><code>[root@bogon data]# /sbin/iptables -I INPUT -p tcp –dport 3306 -j ACCEPT<br>[root@bogon data]# /etc/rc.d/init.d/iptables save<br>iptables: Saving firewall rules to /etc/sysconfig/iptables:[  OK  ]<br>[root@bogon data]# /etc/rc.d/init.d/iptables restart<br>iptables: Flushing firewall rules:                         [  OK  ]<br>iptables: Setting chains to policy ACCEPT: filter          [  OK  ]<br>iptables: Unloading modules:                               [  OK  ]<br>iptables: Applying firewall rules:                         [  OK  ]<br>[root@bogon data]# /etc/init.d/iptables status</code></pre><br><hr style="position: relative; margin-top: 1em;"><div class="scontainer" style="position: relative; margin-top: 1em;"><div class="pull-right md-copyright-footer"></div></div></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/mysql主从配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/mysql主从配置/" itemprop="url">mysql主从安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-主从操作简述"><a href="#1-主从操作简述" class="headerlink" title="1.主从操作简述"></a>1.主从操作简述</h1><ul>
+<li>1、主从服务器分别作以下操作：</li>
+<li>1.1、版本一致</li>
+<li>1.2、初始化表，并在后台启动mysql</li>
+<li>1.3、修改root的密码</li>
+<li><p>1.4、准备好2台数据库 192.168.139.130 为master ,192.168.139.132 为slave 两台数据库版本相同。</p>
+<h1 id="2-操作步骤"><a href="#2-操作步骤" class="headerlink" title="-  2. 操作步骤"></a>-  2. 操作步骤</h1><p>A、修改主服务器master:</p>
+<p> #vi /etc/my.cnf<br> [mysqld]<br> log-bin=mysql-bin //[必须]启用二进制日志<br> server-id=130  //[必须]服务器唯一ID，默认是1，一般取IP最后一段<br>B、修改从服务器slave:</p>
+<p> #vi /etc/my.cnf<br> [mysqld]<br> log-bin=mysql-bin //[必须]启用二进制日志<br> server-id=132  //[必须]服务器唯一ID，默认是1，一般取IP最后一段<br>c、重启两台服务器的mysql</p>
+</li>
+</ul>
+<p>D、在主服务器上建立帐户并授权slave:</p>
+<pre><code>/home/mysql/bin/mysql -uroot -p000000  
+GRANT REPLICATION SLAVE ON *.* to &apos;root&apos;@&apos;%&apos; identified by &apos;000000&apos;;//一般不用root帐号，&amp;ldquo;%&amp;rdquo;表示所有客户端都可能连，只要帐号，密码正确，此处可用具体客户端IP代替，如192.168.145.226，加强安全。
+</code></pre><p>grant replication slave1 on <em>.</em> to ‘root‘@’192.168.139.132’ identified by ‘000000’;</p>
+<p>grant replication slave on <em>.</em> to ‘root‘@’192.168.139.134’ identified by ‘000000’;</p>
+<p>E、登录主服务器的mysql，查询master的状态</p>
+<pre><code>mysql&gt; show master status;
++------------------+----------+--------------+------------------+-------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++------------------+----------+--------------+------------------+-------------------+
+| mysql-bin.000001 |  437 |  |  |   |
++------------------+----------+--------------+------------------+-------------------+
+1 row in set (0.02 sec)
+</code></pre><p>F、配置从服务器Slave：</p>
+<pre><code>mysql&gt; stop slave;
+mysql&gt; change master to master_host=&apos;192.168.139.130&apos;,master_user=&apos;root&apos;,master_password=&apos;000000&apos;,master_log_file=&apos;mysql-bin.000002&apos;,master_log_pos=2783;
+Mysql&gt;start slave;  //启动从服务器复制功能
+</code></pre><p>G、检查从服务器复制功能状态：</p>
+<pre><code>mysql&gt;  show slave status\G
+*************************** 1. row ***************************
+   Slave_IO_State: Waiting for master to send event
+  Master_Host: 192.168.139.130//主服务器地址
+  Master_User: root//授权帐户名，尽量避免使用root
+  Master_Port: 3306//数据库端口，部分版本没有此行
+Connect_Retry: 60
+  Master_Log_File: mysql-bin.000001
+  Read_Master_Log_Pos: 437/#同步读取二进制日志的位置，大于等于Exec_Master_Log_Pos
+   Relay_Log_File: bogon-relay-bin.000002
+Relay_Log_Pos: 320
+Relay_Master_Log_File: mysql-bin.000001
+ Slave_IO_Running: Yes//此状态必须YES
+Slave_SQL_Running: Yes//此状态必须YES
+  Replicate_Do_DB: 
+  Replicate_Ignore_DB: 
+   Replicate_Do_Table: 
+   Replicate_Ignore_Table: 
+  Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+   Last_Errno: 0
+   Last_Error: 
+ Skip_Counter: 0
+  Exec_Master_Log_Pos: 437
+  Relay_Log_Space: 527
+  Until_Condition: None
+   Until_Log_File: 
+Until_Log_Pos: 0
+   Master_SSL_Allowed: No
+   Master_SSL_CA_File: 
+   Master_SSL_CA_Path: 
+  Master_SSL_Cert: 
+Master_SSL_Cipher: 
+   Master_SSL_Key: 
+Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+Last_IO_Errno: 0
+Last_IO_Error: 
+   Last_SQL_Errno: 0
+   Last_SQL_Error: 
+  Replicate_Ignore_Server_Ids: 
+ Master_Server_Id: 130
+  Master_UUID: 1310fd69-b880-11e6-87a5-000c29594a32
+ Master_Info_File: /home/mysql/data/master.info
+SQL_Delay: 0
+  SQL_Remaining_Delay: NULL
+  Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+   Master_Retry_Count: 86400
+  Master_Bind: 
+  Last_IO_Error_Timestamp: 
+ Last_SQL_Error_Timestamp: 
+   Master_SSL_Crl: 
+   Master_SSL_Crlpath: 
+   Retrieved_Gtid_Set: 
+Executed_Gtid_Set: 
+Auto_Position: 0
+ Replicate_Rewrite_DB: 
+ Channel_Name: 
+   Master_TLS_Version: 
+1 row in set (0.00 sec)
+</code></pre><p>主从服务器配置完成。</p>
+<h1 id="3-测试"><a href="#3-测试" class="headerlink" title="3. 测试"></a>3. 测试</h1><pre><code>create database hi_db;
+use hi_db;
+create table hi_tb(id int(3),name char(10));
+insert into hi_tb values(001,&apos;test&apos;);
+</code></pre><h1 id="4-重要的注意事项！！！！！"><a href="#4-重要的注意事项！！！！！" class="headerlink" title="4. 重要的注意事项！！！！！"></a>4. 重要的注意事项！！！！！</h1><p>==如果是克隆过来的系统需要修改：==</p>
+<ol>
+<li>vi /ect/my.cnf 中的server_id 字段</li>
+<li>vi /home/mysql/data/auto.cnf 中的uuid的值</li>
+</ol>
+<p>编写一shell脚本，用nagios监控slave的两个yes（Slave_IO及Slave_SQL进程），如发现只有一个或零个yes，就表明主从有问题了，发短信警报吧。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/linux定时任务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/linux定时任务/" itemprop="url">Linux定时任务配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、说明"><a href="#一、说明" class="headerlink" title="一、说明"></a>一、说明</h1><h2 id="1-配置"><a href="#1-配置" class="headerlink" title="1.配置"></a>1.配置</h2><p>首先查看一下/etc/crontab文件：</p>
+<pre><code>SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+
+# For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+</code></pre><p>前四行是有关设置cron任务运行的环境变量。<br>SHELL变量的值指定系统使用的SHELL环境(该样例为bash shell)，<br>PATH变量定义了执行命令的路径。<br>Cron的输出以电子邮件的形式发给MAILTO变量定义的用户名。如果MAILTO变量定义为空字符串(MAILTO=””)，电子邮件不会被发送。执行命令或脚本时HOME变量可用来设置基目录。<br>文件/etc/crontab中每行任务的描述格式如下:</p>
+<pre><code>minute hour day month dayofweek command
+minute - 从0到59的整数 
+hour - 从0到23的整数 
+day - 从1到31的整数 (必须是指定月份的有效日期)
+month - 从1到12的整数 (或如Jan或Feb简写的月份)
+dayofweek - 从0到7的整数，0或7用来描述周日 (或用Sun或Mon简写来表示)
+command - 需要执行的命令(可用as ls /proc &gt;&gt; /tmp/proc或 执行自定义脚本的命令) 
+root表示以root用户身份来运行
+run-parts表示后面跟着的是一个文件夹，要执行的是该文件夹下的所有脚本
+</code></pre><h2 id="3-编辑设置定时任务"><a href="#3-编辑设置定时任务" class="headerlink" title="3.编辑设置定时任务"></a>3.编辑设置定时任务</h2><pre><code>crontab -u root -e
+</code></pre><h2 id="2-服务启动"><a href="#2-服务启动" class="headerlink" title="2.服务启动"></a>2.服务启动</h2><p>可以用以下的方法启动、关闭这个服务：</p>
+<pre><code>/sbin/service crond start //启动服务
+/sbin/service crond stop //关闭服务
+/sbin/service crond restart //重启服务
+/sbin/service crond reload //重新载入配置
+</code></pre><h2 id="3-自动启动"><a href="#3-自动启动" class="headerlink" title="3.自动启动"></a>3.自动启动</h2><p>在/etc/rc.d/rc.local这个脚本的末尾加上：</p>
+<pre><code>/sbin/service crond start
+</code></pre><h1 id="二、git-举例"><a href="#二、git-举例" class="headerlink" title="二、git 举例"></a>二、git 举例</h1><p>场景说明：每两分更新一次doc-api项目。</p>
+<h1 id="1-编写脚本"><a href="#1-编写脚本" class="headerlink" title="1. 编写脚本"></a>1. 编写脚本</h1><p>   vi /root/cron-minute-5/doc-api.sh</p>
+<pre><code>#!/bin/sh
+currentDir=$PWD
+echo &quot;Start to publish...\n&quot;
+cd /home/api-doc/
+git pull
+cd $currentDir
+</code></pre><h2 id="2-授权"><a href="#2-授权" class="headerlink" title="2.授权"></a>2.授权</h2><pre><code>chmod +x /root/cron-minute-5/doc-api.sh  
+</code></pre><h2 id="3-设置定时任务"><a href="#3-设置定时任务" class="headerlink" title="3.设置定时任务"></a>3.设置定时任务</h2><p>crontab -u root -e</p>
+<p>输入：</p>
+<pre><code>*/2 * * * * /root/cron-minute-5/doc-api.sh
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/12/开发环境/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -260,7 +2089,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T16:45:07+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-12T16:34:08+08:00">
                 2018-09-12
               </time>
             
@@ -270,6 +2099,39 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -933,14 +2795,32 @@ http://xx.xx.xx.216:16010
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
             
 
           </nav>

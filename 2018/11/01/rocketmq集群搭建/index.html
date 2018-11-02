@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="特点 支持严格的消息顺序 支持Topic与Queue两种模式 支持事物 亿级消息堆积能力 同时支持Push与Pull方式消费消息 高吞吐、高可用、低延迟、易扩展、分布式 组件全长连接 核心概念 Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息；支持同步、异步、one-way模式  Producer Group：Producer的集合名称，这类Producer通常发送一类消息，">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RocketMQ集群安装">
+<meta property="og:url" content="http://yoursite.com/2018/11/01/rocketmq集群搭建/index.html">
+<meta property="og:site_name" content="Hu丶先生">
+<meta property="og:description" content="特点 支持严格的消息顺序 支持Topic与Queue两种模式 支持事物 亿级消息堆积能力 同时支持Push与Pull方式消费消息 高吞吐、高可用、低延迟、易扩展、分布式 组件全长连接 核心概念 Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息；支持同步、异步、one-way模式  Producer Group：Producer的集合名称，这类Producer通常发送一类消息，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-11-01T11:39:57.622Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RocketMQ集群安装">
+<meta name="twitter:description" content="特点 支持严格的消息顺序 支持Topic与Queue两种模式 支持事物 亿级消息堆积能力 同时支持Push与Pull方式消费消息 高吞吐、高可用、低延迟、易扩展、分布式 组件全长连接 核心概念 Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息；支持同步、异步、one-way模式  Producer Group：Producer的集合名称，这类Producer通常发送一类消息，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/01/rocketmq集群搭建/"/>
+
+
+
+
+
+  <title>RocketMQ集群安装 | Hu丶先生</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hu丶先生</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">hukunchi</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/rocketmq集群搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hu丶先生">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hu丶先生">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RocketMQ集群安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T19:31:39+08:00">
+                2018-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
+<li>支持严格的消息顺序</li>
+<li>支持Topic与Queue两种模式</li>
+<li>支持事物</li>
+<li>亿级消息堆积能力</li>
+<li>同时支持Push与Pull方式消费消息</li>
+<li>高吞吐、高可用、低延迟、易扩展、分布式</li>
+<li><p>组件全长连接</p>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1></li>
+<li><p>Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息；支持同步、异步、one-way模式</p>
+</li>
+<li>Producer Group：Producer的集合名称，这类Producer通常发送一类消息，且发送逻辑一致</li>
+<li>Consumer：消息消费者，负责消费消息，一般是后台系统负责异步消费</li>
+<li>Consumer Group：Consumer的集合名称，这类Consumer通常消费一类消息，且消费逻辑一致；同组的consumer可均衡及故障转移</li>
+<li>PullConsumer：Consumer的一种，应用通常主动调用Consumer的拉消息方法从Broker拉消息，主动权由应用控制</li>
+<li>PushConsumer：Consumer的一种，应用通常向Consumer对象注册一个Listener 接口，一旦收到消息，Consumer对象立刻回调 Listener 接口方法</li>
+<li>Topic：消息通道，逻辑上区分消息发送目的与消息接收源</li>
+<li>Message：传递的被封装的信息；RocketMQ默认通过轮询broker集群中所有broker上的同topic的所有队列的方式来确定消息被发送到哪一个队列</li>
+<li>Message Queue：Topic逻辑上分成几个子通道，每个子通道即为消息队列；主要是为了高并发及故障冗余</li>
+<li>Tag：带标签的消息队列</li>
+<li>Broker：消息中转站，从producer接收并存储消息，向consumer提供服务；还会记录消息消费的数据，比如消费组，消费位置，队列信息等</li>
+<li>Name Server：名称服务，生产者/消费者查询此服务获取包含对应topic的broker</li>
+<li>Message Model：消费模型；Clustering模型指一个 Consumer Group中的Consumer实例平均分摊消费消息；Broadcasting指一条消息被多个 Consumer 消费，即使这些 Consumer 属于同一个 Consumer Group，消息也会被 Consumer Group 中的每个 Consumer 都消费一次</li>
+<li>Message Order：消费顺序；Orderly指严格按照消息产生的顺序消费；Concurrently指并发消费，消费的消息顺序可能会打乱</li>
+</ul>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><ul>
+<li><p>name server:</p>
+<p>  提供轻量级服务发现与路由服务，接受Broker注册信息并通过心跳检查broker是否存活；接受客户端查询broker与queue请求；无状态，建议部署2个以上实例</p>
+</li>
+<li><p>broker:</p>
+<p>  消息接收、存储、发送、查询、HA主从同步；Broker分为Master与Slave，一个Master可以对应多个Slave，但是一个Slave只能对应一个Master，Master与Slave的对应关系通过指定相同的BrokerName，不同的BrokerId来定义，BrokerId为0表示Master，非0表示Slave。Master也可以部署多个。每个Broker与NameServer集群中的所有节点建立长连接，定时注册Topic信息到所有NameServer。至少2个主实例</p>
+</li>
+<li><p>Producer Group:</p>
+<p>  用来表示一个发送消息应用，一个Producer Group下包含多个Producer实例，可以是多台机器，也可以是一台机器的多个进程，或者一个进程的多个Producer对象。一个Producer Group可以发送多个Topic消息，Producer Group作用如下：</p>
+<ol>
+<li>标识一类Producer</li>
+<li>可以通过运维工具查询这个发送消息应用下有多个Producer实例</li>
+<li>发送分布式事务消息时，如果Producer中途意外宕机，Broker会主动回调Producer Group内的任意一台机器来确认事务状态。</li>
+</ol>
+</li>
+<li><p>Consumer Group: </p>
+<p>  用来表示一个消费消息应用，一个Consumer Group下包含多个Consumer实例，可以是多台机器，也可以是多个进程，或者是一个进程的多个Consumer对象。一个Consumer Group下的多个Consumer以均摊方式消费消息，如果设置为广播方式，那么这个Consumer Group下的每个实例都消费全量数据。</p>
+</li>
+<li><p>Producer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master建立长连接，且定时向Master发送心跳。Producer完全无状态，可集群部署。</p>
+</li>
+<li><p>Consumer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer取Topic路由信息，并向提供Topic服务的Master、Slave建立长连接，且定时向Master、Slave发送心跳。Consumer既可以从Master订阅消息，也可以从Slave订阅消息，订阅规则由Broker配置决定</p>
+</li>
+</ul>
+<p>结构图<br>部署结构图</p>
+<h1 id="broke部署模型"><a href="#broke部署模型" class="headerlink" title="broke部署模型"></a>broke部署模型</h1><ul>
+<li><p>单Master模式:</p>
+<p>  优点：除了配置简单没什么优点</p>
+<p>  缺点：不可靠，该机器重启或宕机，将导致整个服务不可用</p>
+</li>
+<li><p>多Master模式:</p>
+<p>  优点：配置简单，性能最高</p>
+<p>   缺点：可能会有少量消息丢失(异步刷盘)，单台机器重启或宕机期间，该机器下未被消费的消息在机器恢复前不可订阅，影响消息实时性</p>
+</li>
+<li><p>多Master多Slave模式(异步复制)</p>
+<p>  优点：性能同多Master几乎一样，实时性高，主备间切换对应用透明，不需人工干预;Master宕机，消费者可以从Slave上进行消费</p>
+<p>  缺点：异步复制的方式，主备之间短暂延迟，MS级别;Master宕机或磁盘损坏时会有少量消息丢失</p>
+</li>
+<li><p>多Master多Slave模式(同步双写)：</p>
+<p>  优点：服务可用性与数据可用性非常高,Master/Slave都写成功的前提下,向应用返回成功</p>
+<p>  缺点：同步的性能比异步稍低</p>
+</li>
+</ul>
+<h1 id="部署测试"><a href="#部署测试" class="headerlink" title="部署测试"></a>部署测试</h1><h2 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h2><pre><code>ip    主机名    角色
+10.0.4.56    node1    nameserver/broker master
+10.0.4.57    node2    nameserver/broker master
+</code></pre><h2 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h2><pre><code>tar xf jdk-8u121-linux-x64.tar.gz -C /usr/local
+mv /usr/local/jdk1.8.0_121 /usr/local/jdk1.8
+cat &gt; /etc/profile.d/java.sh  &lt;&lt; @
+JAVA_HOME=/usr/local/jdk1.8
+JRE_HOME=$JAVA_HOME/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:.
+export JAVA_HOME JRE_HOME PATH CLASSPATH
+@
+source  /etc/profile.d/java.sh
+java -version
+</code></pre><h2 id="下载安装rocketmq（node1节点）"><a href="#下载安装rocketmq（node1节点）" class="headerlink" title="下载安装rocketmq（node1节点）"></a>下载安装rocketmq（node1节点）</h2><pre><code>##安装maven3.2以上版本
+wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+tar xf apache-maven-3.5.0-bin.tar.gz
+mv apache-maven-3.5.0 /usr/local/maven3
+ln -svf /usr/local/maven3/bin/mvn /usr/local/bin/mvn
+
+##使用阿里云的仓库
+vim /usr/local/maven3/conf/settings.xml
+...
+&lt;mirror&gt;
+  &lt;id&gt;alimaven&lt;/id&gt;
+  &lt;name&gt;aliyun maven&lt;/name&gt;
+  &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+  &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+&lt;/mirror&gt;
+
+##编译
+git clone  https://github.com/apache/incubator-rocketmq.git
+cd incubator-rocketmq
+mvn -Prelease-all -DskipTests clean install -U
+
+cd distribution/target
+mv apache-rocketmq /usr/local/rocketmq
+
+##将编译好的包传到其它机器上
+rsync -avP  apache-rocketmq.tar.gz root@10.0.4.57:/usr/local/src
+
+#node2上操作
+cd /usr/local/src
+mkdir -pv /usr/local/rocketmq
+tar xf apache-rocketmq.tar.gz  -C /usr/local/rocketmq
+</code></pre><h2 id="启动nameserver（node1、node2节点）"><a href="#启动nameserver（node1、node2节点）" class="headerlink" title="启动nameserver（node1、node2节点）"></a>启动nameserver（node1、node2节点）</h2><pre><code>#修改日志路径，默认家目录下logs目录，不合适
+cd /usr/local/rocketmq/conf
+sed -i &apos;s@${user.home}@/usr/local/rocketmq@&apos; logback_*
+
+##调整jvm内存
+cd /usr/local/rocketmq/bin
+vim runserver.sh
+JAVA_OPT=&quot;${JAVA_OPT} -server -Xms2g -Xmx2g -XX:PermSize=256m -Xmn1g -XX:MaxPermSize=256m&quot;
+
+#启动
+nohup ./mqnamesrv &amp;
+
+#日志
+tail ../logs/rocketmqlogs/namesrv.log
+</code></pre><h2 id="node1启动broker"><a href="#node1启动broker" class="headerlink" title="node1启动broker"></a>node1启动broker</h2><pre><code>cd /usr/local/rocketmq/conf
+vim 2m-noslave/broker-a.properties
+##############################################
+
+#多网卡机器可能存在识别错误的情况，可手动设置监听IP
+#brokerIP1=10.0.4.56
+#监听端口；默认10911
+listenPort=10911
+#broker所属集群，用于broker负载均衡和避免单点故障；默认DefaultCluster
+brokerClusterName=touna-rocketmq
+#broker名称，有主从关系的具有相同的brokerName，不同的brokerId；
+brokerName=broker-a
+#brokerId为0表示主，非0整数表示从；默认0
+brokerId=0
+#nameserver地址
+namesrvAddr=10.0.4.56:9876;10.0.4.57:9876;
+#是否允许Broker自动创建Topic，建议线下开启，线上关闭；若开启则此TOPIC消息都会发给固定一台broker，达不到负载均衡目的；默认true
+autoCreateTopicEnable=false
+#是否允许Broker自动创建订阅组，建议线下开启，线上关闭；默认true
+autoCreateSubscriptionGroup=false
+#是否从web服务器获取Name Server地址，针对大规模的Broker集群建议使用这种方式；默认false
+fetchNamesrvAddrByAddressServer=true
+#
+mapedFileSizeCommitLog=1073741824
+#文件删除时间点；默认凌晨4点
+deleteWhen=04
+#文件保留时间，单位小时；默认48小时
+fileReservedTime=168
+#磁盘空间最大使用率；默认75%
+diskMaxUsedSpaceRatio=90
+#磁盘满、且无过期文件情况下TRUE表示强制删除文件，优先保证服务可用
+#FALSE 标记服务不可用，文件不删除
+cleanFileForciblyEnable=true
+#存储根目录
+storePathRootDir=/data/db/rocketmq
+#commitLog存储目录；默认$HOME/store/commitlog
+storePathCommitLog=/data/db/rocketmq/commitlog
+#消费队列存储路径；默认$HOME/store/consumequeue
+storePathConsumerQueue=/data/db/rocketmq/consumequeue
+#角色 ASYNC_MASTER(异步复制) SYNC_MASTER(同步复制双写) SLAVE（从库）
+brokerRole=ASYNC_MASTER
+# 刷盘方式，ASYNC_FLUSH（异步） SYNC_FLUSH（同步）
+flushDiskType=ASYNC_FLUSH
+##############################################
+
+
+#根据实际情况调整下jvm内存
+vim ../bin/runbroker.sh
+
+#启动
+nohup bin/mqbroker -c conf/2m-noslave/broker-a.properties &amp;
+</code></pre><h2 id="node2启动broker"><a href="#node2启动broker" class="headerlink" title="node2启动broker"></a>node2启动broker</h2><pre><code>cd /usr/local/rocketmq/conf
+vim 2m-noslave/broker-b.properties
+##############################################
+
+#多网卡机器可能存在识别错误的情况，可手动设置监听IP
+#brokerIP1=10.0.4.57
+#监听端口；默认10911
+listenPort=10911
+#broker所属集群，用于broker负载均衡和避免单点故障；默认DefaultCluster
+brokerClusterName=touna-rocketmq
+#broker名称，有主从关系的具有相同的brokerName，不同的brokerId；
+brokerName=broker-b
+#brokerId为0表示主，非0整数表示从；默认0
+brokerId=0
+#nameserver地址
+namesrvAddr=10.0.4.56:9876;10.0.4.57:9876;
+#是否允许Broker自动创建Topic，建议线下开启，线上关闭；若开启则此TOPIC消息都会发给固定一台broker，达不到负载均衡目的；默认true
+autoCreateTopicEnable=false
+#是否允许Broker自动创建订阅组，建议线下开启，线上关闭；默认true
+autoCreateSubscriptionGroup=false
+#是否从web服务器获取Name Server地址，针对大规模的Broker集群建议使用这种方式；默认false
+fetchNamesrvAddrByAddressServer=true
+#
+mapedFileSizeCommitLog=1073741824
+#文件删除时间点；默认凌晨4点
+deleteWhen=04
+#文件保留时间，单位小时；默认48小时
+fileReservedTime=168
+#磁盘空间最大使用率；默认75%
+diskMaxUsedSpaceRatio=90
+#磁盘满、且无过期文件情况下TRUE表示强制删除文件，优先保证服务可用
+#FALSE 标记服务不可用，文件不删除
+cleanFileForciblyEnable=true
+#存储根目录
+storePathRootDir=/data/db/rocketmq
+#commitLog存储目录；默认$HOME/store/commitlog
+storePathCommitLog=/data/db/rocketmq/commitlog
+#消费队列存储路径；默认$HOME/store/consumequeue
+storePathConsumerQueue=/data/db/rocketmq/consumequeue
+#角色 ASYNC_MASTER(异步复制) SYNC_MASTER(同步复制双写) SLAVE（从库）
+brokerRole=ASYNC_MASTER
+# 刷盘方式，ASYNC_FLUSH（异步） SYNC_FLUSH（同步）
+flushDiskType=ASYNC_FLUSH
+##############################################
+
+
+#根据实际情况调整下jvm内存
+vim ../bin/runbroker.sh
+
+#启动
+nohup bin/mqbroker -c conf/2m-noslave/broker-b.properties &amp;
+</code></pre><h2 id="收发测试"><a href="#收发测试" class="headerlink" title="收发测试"></a>收发测试</h2><pre><code>export NAMESRV_ADDR=&apos;10.0.4.56:9876;10.0.4.57:9876&apos;
+
+#创建测试的topic
+bin//mqadmin  updateTopic -n 10.0.4.56:9876 -c touna-rocketmq -t TopicTest
+
+#生产消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+
+#消费消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+</code></pre><h2 id="关闭nameserver、broker"><a href="#关闭nameserver、broker" class="headerlink" title="关闭nameserver、broker"></a>关闭nameserver、broker</h2><pre><code>sh bin/mqshutdown broker
+sh bin/mqshutdown namesrv
+</code></pre><h2 id="管理工具"><a href="#管理工具" class="headerlink" title="管理工具"></a>管理工具</h2><pre><code>mqadmin
+mqadmin help &lt;command&gt;
+</code></pre><h2 id="producers-consumers查找nameserver的方式-优先级依次降低"><a href="#producers-consumers查找nameserver的方式-优先级依次降低" class="headerlink" title="producers/consumers查找nameserver的方式(优先级依次降低)"></a>producers/consumers查找nameserver的方式(优先级依次降低)</h2><ol>
+<li><p>编程方式:</p>
+<p> producer.setNamesrvAddr(“name-server1-ip:port;name-server2-ip:port”)</p>
+<p> consumer.setNamesrvAddr(“name-server1-ip:port;name-server2-ip:port”)</p>
+</li>
+<li><p>传java参数</p>
+<p> -Drocketmq.namesrv.addr=10.0.4.56:9876;10.0.4.57:9876</p>
+</li>
+<li><p>设置环境变量NAMESRV_ADDR</p>
+<p> export NAMESRV_ADDR=’10.0.4.56:9876;10.0.4.57:9876</p>
+</li>
+<li><p>http接口(需要设置nginx，客户端改hosts)</p>
+<p> 访问<a href="http://jmenv.tbsite.net:8080/rocketmq/nsaddr得到类似10.0.4.56:9876;10.0.4.57:9876的结果" target="_blank" rel="noopener">http://jmenv.tbsite.net:8080/rocketmq/nsaddr得到类似10.0.4.56:9876;10.0.4.57:9876的结果</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/../../images/wechatpay.jpg" alt="Hu丶先生 WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/01/redis-HA集群配置/" rel="next" title="redis-HA集群配置">
+                <i class="fa fa-chevron-left"></i> redis-HA集群配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/01/rocketmq单机安装/" rel="prev" title="RocketMQ单机版安装">
+                RocketMQ单机版安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Hu丶先生</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#特点"><span class="nav-number">1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核心概念"><span class="nav-number">2.</span> <span class="nav-text">核心概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组件"><span class="nav-number">3.</span> <span class="nav-text">组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#broke部署模型"><span class="nav-number">4.</span> <span class="nav-text">broke部署模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署测试"><span class="nav-number">5.</span> <span class="nav-text">部署测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境信息"><span class="nav-number">5.1.</span> <span class="nav-text">环境信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装jdk"><span class="nav-number">5.2.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载安装rocketmq（node1节点）"><span class="nav-number">5.3.</span> <span class="nav-text">下载安装rocketmq（node1节点）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动nameserver（node1、node2节点）"><span class="nav-number">5.4.</span> <span class="nav-text">启动nameserver（node1、node2节点）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node1启动broker"><span class="nav-number">5.5.</span> <span class="nav-text">node1启动broker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#node2启动broker"><span class="nav-number">5.6.</span> <span class="nav-text">node2启动broker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收发测试"><span class="nav-number">5.7.</span> <span class="nav-text">收发测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭nameserver、broker"><span class="nav-number">5.8.</span> <span class="nav-text">关闭nameserver、broker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管理工具"><span class="nav-number">5.9.</span> <span class="nav-text">管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#producers-consumers查找nameserver的方式-优先级依次降低"><span class="nav-number">5.10.</span> <span class="nav-text">producers/consumers查找nameserver的方式(优先级依次降低)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hu丶先生</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
